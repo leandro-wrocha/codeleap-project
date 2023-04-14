@@ -1,0 +1,125 @@
+.modal {
+  max-width: 66.4rem;
+  width: 100%;
+
+  background: #fff;
+  border-radius: 1.6rem;
+
+  padding: 2.4rem;
+
+  > div {
+    width: 100%;
+
+    > label {
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 26px;
+
+      color: #000000;
+    }
+
+    > form {
+      width: 100%;
+
+      margin-top: 2.4rem;
+
+      > .formInputs {
+        margin: 1.6rem 0;
+
+        max-width: 100%;
+  
+        > div {
+          position: relative;
+    
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+
+          > label {
+            font-weight: 400;
+            font-size: 1.6rem;
+            line-height: 1.9rem;
+            color: #000000;
+          }
+    
+          > svg {
+            pointer-events: none;
+            position: absolute;
+            left: 0.5rem;
+    
+            width: 2.4rem;
+            height: 2.4rem;
+          }
+    
+          > input, textarea {
+            height: 3.2rem;
+  
+            border-radius: 1.6rem;
+
+            padding: 0 1.6rem;
+          }
+
+          > textarea {
+            height: 7.4rem;
+            padding-top: 1rem;
+          }
+        }
+
+        > div:last-child {
+          margin-top: 2.4rem;
+        }
+      }
+
+      .formButtons {
+        width: 100%;
+  
+        display: flex;
+        justify-content: flex-end;
+        gap: 1.6rem;
+  
+        > button {
+          width: 12rem;
+          height: 3.2rem;
+  
+          background: transparent;
+          border: none;
+          border: 1px solid #999;
+          border-radius: 0.5rem;
+
+          > span {
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 1.6rem;
+            line-height: 1.9rem;
+            /* identical to box height */
+
+            text-align: center;
+
+            color: #000;
+          }
+
+          > &.save {
+            background: #47B960;
+            border: none;
+  
+            > span {
+              font-family: 'Roboto';
+              font-style: normal;
+              font-weight: 700;
+              font-size: 1.6rem;
+              line-height: 1.9rem;
+              /* identical to box height */
+  
+              text-align: center;
+  
+              color: #FFFFFF;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -3,7 +3,14 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 
 import styles from '@/styles/home.module.scss';
 
+import { useState } from "react";
+import { ModalConfirmDelete } from "@/components/home/modals/confirm-delete";
+import { ModalEditPost } from "@/components/home/modals/edit";
+
 export default function Home () {
+  const [showModalEdit, setShowModalEdit] = useState(false);
+  const [showModalConfirmDelete, setShowModalConfirmDelete] = useState(false);
+
   return (
     <>
       <Head>
@@ -23,10 +30,12 @@ export default function Home () {
 
             <div className={styles.formInputs}>
               <div>
+                <label>Title</label>
                 <input placeholder="title" />
               </div>
 
               <div>
+                <label>Content</label>
                 <textarea placeholder="content here" />
               </div>
             </div>
@@ -38,15 +47,15 @@ export default function Home () {
             </div>
           </form>
 
-          <div>
-            <div>
+          <div className={styles.postList}>
+            <div className={styles.post}>
               <header>
                 <label>My first post at codeleap network</label>
 
                 <div>
-                  <FaTrash />
+                  <FaTrash onClick={() => setShowModalConfirmDelete(true)} />
 
-                  <FaEdit />
+                  <FaEdit onClick={() => setShowModalEdit(true)}/>
                 </div>
               </header>
 
@@ -65,8 +74,33 @@ export default function Home () {
               </div>
             </div>
           </div>
+
+          <div className="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
         </div>
       </main>
+
+      <ModalConfirmDelete
+        show={showModalConfirmDelete}
+        onHide={() => {
+          setShowModalConfirmDelete(false);
+        }}
+      />
+
+      <ModalEditPost
+        show={showModalEdit}
+        onHide={() => {
+          setShowModalEdit(false);
+        }}
+      />
     </>
   )
 }
