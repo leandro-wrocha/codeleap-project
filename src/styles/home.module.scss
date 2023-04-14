@@ -1,0 +1,100 @@
+.container {
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+
+  background: #DDDDDD;
+
+  > div {
+    max-width: 80rem;
+
+    background: #fff;
+
+    > header {
+      width: 100%;
+      height: 8rem;
+
+      display: flex;
+      align-items: center;
+
+      background: #7695EC;
+
+      padding: 0 3.7rem;
+
+      > label {
+        font-weight: 700;
+        font-size: 2.2rem;
+        line-height: 2.6rem;
+        color: #FFFFFF;
+      }
+    }
+
+    > form {
+      width: 75.2rem;
+      height: 33.4rem;
+
+      background: #FFFFFF;
+      border: 1px solid #999999;
+      border-radius: 1.6rem;
+
+      > span {
+        font-weight: 700;
+        font-size: 2.2rem;
+        line-height: 2.6rem;
+
+        color: #000000;
+      }
+
+      .formInputs {
+        margin: 1.6rem 0;
+  
+        > div {
+          position: relative;
+    
+          display: flex;
+          align-items: center;
+    
+          > svg {
+            pointer-events: none;
+            position: absolute;
+            left: 0.5rem;
+    
+            width: 2.4rem;
+            height: 2.4rem;
+          }
+    
+          > input, textarea {
+            width: 100%;
+    
+            height: 3.2rem;
+            width: 45rem;
+    
+            padding-left: 3.2rem;
+            padding-right: 1.6rem;
+          }
+
+          > textarea {
+            height: 7.4rem;
+          }
+        }
+      }
+  
+      .formButtons {
+        width: 100%;
+  
+        display: flex;
+        justify-content: flex-end;
+  
+        > button {
+          width: 11rem;
+          height: 3.2rem;
+  
+          background: #7695EC;
+          border: none;
+          border-radius: 0.5rem;
+        }
+      }
+    }
+  }
+}
