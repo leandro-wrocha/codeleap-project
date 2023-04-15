@@ -1,12 +1,36 @@
 import Modal from 'react-modal';
 import styles from './styles.module.scss';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
 
 interface IModalEditPostProps {
   show: boolean;
   onHide: () => void;
+  postId: number;
+  loadPosts: () => void;
 }
 
-export const ModalEditPost = ({ show, onHide }: IModalEditPostProps) => {
+interface IFormValues {
+  title: string;
+  content: string;
+}
+
+export const ModalEditPost = ({ show, onHide, postId, loadPosts }: IModalEditPostProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<IFormValues>();
+
+  const handleEdit = async (values: IFormValues) => {
+    const response = await axios.patch(`https://dev.codeleap.co.uk/careers/${postId}`, {
+      values,
+    });
+
+    loadPosts();
+    onHide();
+  }
+
   return (
     <Modal
       isOpen={show}
@@ -25,16 +49,16 @@ export const ModalEditPost = ({ show, onHide }: IModalEditPostProps) => {
       <div>
         <label>Edit item</label>
 
-        <form>
+        <form onSubmit={handleSubmit(handleEdit)}>
           <div className={styles.formInputs}>
             <div>
               <label>Title</label>
-              <input placeholder='hello world' />
+              <input {...register('title')} placeholder='hello world' />
             </div>
 
             <div>
               <label>Content</label>
-              <textarea placeholder='content here' />
+              <textarea {...register('content')} placeholder='content here' />
             </div>
           </div>
 

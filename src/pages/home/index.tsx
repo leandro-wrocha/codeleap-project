@@ -3,13 +3,79 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 
 import styles from '@/styles/home.module.scss';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ModalConfirmDelete } from "@/components/home/modals/confirm-delete";
 import { ModalEditPost } from "@/components/home/modals/edit";
+import { api } from "@/actions/api";
+import axios from "axios";
+import { useAuth } from "@/contexts/AuthProvider";
+import { useForm } from "react-hook-form";
+
+interface IPost {
+    "id": number;
+    "username": string;
+    "created_datetime": Date;
+    "title": string;
+    "content": string;
+}
+
+interface IFormValues {
+  title: string;
+  content: string;
+}
 
 export default function Home () {
+  const { user } = useAuth();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<IFormValues>();
+
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [showModalConfirmDelete, setShowModalConfirmDelete] = useState(false);
+  const [idSelect, setIdSelect] = useState(0);
+
+  const [posts, setPosts] = useState<IPost[]>([]);
+
+  const loadPosts = async () => {
+    const response = await axios.get('https://dev.codeleap.co.uk/careers/?limit=10&offset=1');
+
+    console.log(response);
+    setPosts(response.data.results);
+  }
+
+  const handleCreatePost = async (values: IFormValues) => {
+    try {
+      const response = await axios.post('https://dev.codeleap.co.uk/careers/', {
+        username: 'leandro-wrocha',
+        ...values,
+      });
+
+      if (response.status === 201) {
+        loadPosts();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await axios.post(`https://dev.codeleap.co.uk/careers/${id}`);
+
+      loadPosts();
+      setIdSelect(0);
+      setShowModalConfirmDelete(false);
+    } catch (error) {
+
+    }
+  }
+
+  useEffect(() => {
+    loadPosts();
+  }, []);
 
   return (
     <>
@@ -25,18 +91,24 @@ export default function Home () {
             <label>CodeLeap Network</label>
           </header>
 
-          <form>
+          <form onSubmit={handleSubmit(handleCreatePost)}>
             <span>What&apos;s on yout mind</span>
 
             <div className={styles.formInputs}>
               <div>
                 <label>Title</label>
-                <input placeholder="title" />
+                <input {...register('title')} placeholder="title" />
+                {errors.title && (
+                  <span>{errors.title.message}</span>
+                )}
               </div>
 
               <div>
                 <label>Content</label>
-                <textarea placeholder="content here" />
+                <textarea {...register('content')} placeholder="content here" />
+                {errors.content && (
+                  <span>{errors.content.message}</span>
+                )}
               </div>
             </div>
 
@@ -48,31 +120,34 @@ export default function Home () {
           </form>
 
           <div className={styles.postList}>
-            <div className={styles.post}>
-              <header>
-                <label>My first post at codeleap network</label>
+            {posts.length > 1 && posts.map((post) => (
+              <div className={styles.post} key={post.id}>
+                <header>
+                  <label>{post.title}</label>
+
+                  { 'leandro-wrocha' === post.username  && (
+                    <div>
+                      <FaTrash onClick={() => {
+                        setShowModalConfirmDelete(true)
+                        setIdSelect(post.id);  
+                      }} />
+
+                      <FaEdit onClick={() => setShowModalEdit(true)}/>
+                    </div>
+                  )}
+                </header>
 
                 <div>
-                  <FaTrash onClick={() => setShowModalConfirmDelete(true)} />
+                  <div>
+                    <span>@{post.username}</span>
 
-                  <FaEdit onClick={() => setShowModalEdit(true)}/>
+                    <span>{new Date(post.created_datetime).toDateString()}</span>
+                  </div>
+
+                  <p>{post.content}</p>
                 </div>
-              </header>
-
-              <div>
-                <div>
-                  <span>@victor</span>
-
-                  <span>25 minute ago</span>
-                </div>
-
-                <p>
-                  Curabitur suscipit suscipit tellus. Phasellus consectetuer vestibulum elit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Maecenas egestas arcu quis ligula mattis placerat. Duis vel nibh at velit scelerisque suscipit.
-
-                  Duis lobortis massa imperdiet quam. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Fusce a quam. Nullam vel sem. Nullam cursus lacinia erat.
-                </p>
               </div>
-            </div>
+            ))}
           </div>
 
           <div className="lds-roller">
@@ -93,6 +168,9 @@ export default function Home () {
         onHide={() => {
           setShowModalConfirmDelete(false);
         }}
+        onDelete={() => {
+          handleDelete(idSelect);
+        }}
       />
 
       <ModalEditPost
@@ -100,6 +178,8 @@ export default function Home () {
         onHide={() => {
           setShowModalEdit(false);
         }}
+        postId={idSelect}
+        loadPosts={() => loadPosts()}
       />
     </>
   )

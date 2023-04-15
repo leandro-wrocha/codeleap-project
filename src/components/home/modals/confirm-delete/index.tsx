@@ -5,9 +5,10 @@ import Modal from 'react-modal';
 interface IModalConfirmDeleteProps {
   show: boolean;
   onHide: () => void;
+  onDelete: () => void;
 }
 
-export const ModalConfirmDelete = ({ show, onHide }: IModalConfirmDeleteProps) => {
+export const ModalConfirmDelete = ({ show, onHide, onDelete }: IModalConfirmDeleteProps) => {
 
   return (
     <Modal
@@ -31,7 +32,7 @@ export const ModalConfirmDelete = ({ show, onHide }: IModalConfirmDeleteProps) =
             <span>Cancel</span>
           </button>
 
-          <button className={styles.delete}>
+          <button className={styles.delete} onClick={onDelete}>
             <span>Delete</span>
           </button>
         </div>

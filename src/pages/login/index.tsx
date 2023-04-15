@@ -7,9 +7,28 @@ import router from "next/router";
 
 import { FaUserCircle } from 'react-icons/fa';
 
+import { useForm } from "react-hook-form";
+import { useAuth } from "@/contexts/AuthProvider";
+
+interface IFormValues {
+  username: string;
+}
+
 export default function Login() {
-  const handleLogin = async () => {
-    router.push('/home');
+  const { authenticate } = useAuth();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<IFormValues>();
+
+  const handleLogin = async ({ username }: IFormValues ) => {
+    try {
+      await authenticate(username);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -22,7 +41,7 @@ export default function Login() {
       </Head>
       <main className={styles.container}>
         <Image src={LogoImg} alt="Logo" />
-        <form>
+        <form onSubmit={handleSubmit(handleLogin)}>
           <header>
             <strong>Welcome to CodeLeap!</strong>
           </header>
@@ -30,12 +49,18 @@ export default function Login() {
           <div className={styles.formInputs}>
             <div>
               <FaUserCircle />
-              <input placeholder="Please enter your username"/>
+              <input
+                {...register('username')}
+                placeholder="Please enter your username"
+              />
+              {errors.username && (
+                <span>{errors.username.message}</span>
+              )}
             </div>
           </div>
 
           <div className={styles.formButtons}>
-            <button type="button" onClick={handleLogin}>
+            <button>
               <span>LOGIN</span>
             </button>
           </div>
